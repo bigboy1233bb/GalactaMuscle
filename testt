@@ -1,0 +1,21 @@
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local WHITELIST_URL = "https://raw.githubusercontent.com/bigboy1233bb/GalactaMuscle/refs/heads/main/testing"
+
+local function isWhitelisted(userId)
+    local success, result = pcall(function()
+        local response = HttpService:GetAsync(WHITELIST_URL)
+        local data = HttpService:JSONDecode(response)
+        return table.find(data.users, userId) ~= nil
+    end)
+    return success and result
+end
+
+if not isWhitelisted(player.UserId) then
+    player:Kick("You are not whitelisted. Purchase access.")
+    return
+end
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/YourUsername/your-repo/main/script.lua"))()
